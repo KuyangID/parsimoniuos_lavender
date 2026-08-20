@@ -1,6 +1,6 @@
 #!/bin/bash
 # ==============================================================================
-# Tiger Kernel Build Script - KernelSU Variant (QPNP EAS)
+# Lion Kernel Build Script - KernelSU Variant (QPNP EAS)
 # ==============================================================================
 
 set -e
@@ -18,7 +18,7 @@ NC='\033[0m'
 KERNEL_DIR="$(pwd)"
 OUT_DIR="$KERNEL_DIR/out"
 DEFCONFIG="lavender-perf_defconfig"
-CUSTOM_LOCALVERSION="-Tiger"
+CUSTOM_LOCALVERSION="-Lion"
 VERSION_TAG="x1.0"
 ROOT_METHOD="ksu"
 
@@ -62,8 +62,8 @@ LLDV="$("$CLANG_DIR/bin/ld.lld" --version | head -n 1 | sed -e 's/  */ /g' -e 's
 export KBUILD_COMPILER_STRING="$CLGV - $BINV - $LLDV"
 export ARCH=arm64
 export SUBARCH=arm64
-export KBUILD_BUILD_USER="KuyangID"
-export KBUILD_BUILD_HOST="Ubuntod"
+export KBUILD_BUILD_USER="root"
+export KBUILD_BUILD_HOST="KuyStore"
 export HOSTCFLAGS="-fcommon"
 
 MAKE_ARGS=(
@@ -86,7 +86,7 @@ MAKE_ARGS=(
 
 # Banner
 echo -e "${PURPLE}=================================================${NC}"
-echo -e "${CYAN}   Tiger Kernel Compiler (KernelSU Variant)      ${NC}"
+echo -e "${CYAN}    Lion Kernel Compiler (KernelSU Variant)      ${NC}"
 echo -e "${PURPLE}=================================================${NC}"
 echo -e "${BLUE}📌 Source Architecture : QPNP - EAS (Stock)${NC}"
 echo -e "${BLUE}📌 Target Defconfig    : $DEFCONFIG${NC}"
@@ -159,7 +159,7 @@ SECONDS=$((DIFF % 60))
 mkdir -p "$OUTPUT_DIR"
 mkdir -p "$WINDOWS_DEST"
 
-BASE_NAME="Tiger-${VERSION_TAG}-EAS-qpnp-${ROOT_METHOD}"
+BASE_NAME="Lion-${VERSION_TAG}-EAS-qpnp-${ROOT_METHOD}"
 
 if [ "$OUTPUT_FORMAT" = "img" ]; then
     OUTPUT_FILE="$OUTPUT_DIR/${BASE_NAME}-boot.img"

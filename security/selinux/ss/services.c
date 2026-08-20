@@ -74,7 +74,12 @@ int selinux_policycap_netpeer;
 int selinux_policycap_openperm;
 int selinux_policycap_alwaysnetwork;
 
+/* Protects the policy data structures (including sidtab and policydb) */
+#ifdef CONFIG_KSU
+DEFINE_RWLOCK(policy_rwlock);
+#else
 static DEFINE_RWLOCK(policy_rwlock);
+#endif
 
 static struct sidtab sidtab;
 struct policydb policydb;
