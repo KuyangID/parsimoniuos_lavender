@@ -117,25 +117,6 @@ echo -e "${YELLOW}⚙️ Enabling KernelSU & OverlayFS...${NC}"
 scripts/config --file out/.config --enable CONFIG_KSU
 scripts/config --file out/.config --enable CONFIG_OVERLAY_FS
 
-# 1. Compiler Performance Optimization
-scripts/config --file out/.config --enable CONFIG_CC_OPTIMIZE_FOR_PERFORMANCE
-scripts/config --file out/.config --disable CONFIG_CC_OPTIMIZE_FOR_SIZE
-
-# 2. TCP Congestion Control (Default Westwood)
-scripts/config --file out/.config --enable CONFIG_TCP_CONG_ADVANCED
-scripts/config --file out/.config --enable CONFIG_TCP_CONG_WESTWOOD
-scripts/config --file out/.config --enable CONFIG_DEFAULT_WESTWOOD
-scripts/config --file out/.config --set-str CONFIG_DEFAULT_TCP_CONG "westwood"
-
-# 3. I/O Scheduler Optimization (Default CFQ)
-scripts/config --file out/.config --enable CONFIG_IOSCHED_CFQ
-scripts/config --file out/.config --enable CONFIG_DEFAULT_CFQ
-scripts/config --file out/.config --set-str CONFIG_DEFAULT_IOSCHED "cfq"
-
-# 4. Memory & ZRAM (LZ4 Compression)
-scripts/config --file out/.config --enable CONFIG_ZRAM
-scripts/config --file out/.config --enable CONFIG_CRYPTO_LZ4
-
 # Sync Config
 make O=out "${MAKE_ARGS[@]}" olddefconfig
 
