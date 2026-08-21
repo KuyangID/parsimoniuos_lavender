@@ -1,6 +1,7 @@
 #!/bin/bash
 # ==============================================================================
 # Tiger Kernel Build Script - Non-Root / APatch Ready (QPNP EAS)
+# Source: parsimoniuos_lavender
 # ==============================================================================
 
 set -e
@@ -22,21 +23,12 @@ CUSTOM_LOCALVERSION="-Tiger"
 VERSION_TAG="x1.0"
 ROOT_METHOD="nonroot"
 
-# Output Format: "zip" (default) or "img"
-OUTPUT_FORMAT="${1:-zip}"
-
 # Handle special arguments
 CLEAN_BUILD=false
 for arg in "$@"; do
     case "$arg" in
         clean|--clean)
             CLEAN_BUILD=true
-            ;;
-        zip)
-            OUTPUT_FORMAT="zip"
-            ;;
-        img|image)
-            OUTPUT_FORMAT="img"
             ;;
     esac
 done
@@ -61,8 +53,8 @@ LLDV="$("$CLANG_DIR/bin/ld.lld" --version | head -n 1 | sed -e 's/  */ /g' -e 's
 export KBUILD_COMPILER_STRING="$CLGV - $BINV - $LLDV"
 export ARCH=arm64
 export SUBARCH=arm64
-export KBUILD_BUILD_USER="KuyangID"
-export KBUILD_BUILD_HOST="Ubuntod"
+export KBUILD_BUILD_USER="root"
+export KBUILD_BUILD_HOST="KuyStore"
 export HOSTCFLAGS="-fcommon"
 
 MAKE_ARGS=(
@@ -87,10 +79,9 @@ MAKE_ARGS=(
 echo -e "${PURPLE}=================================================${NC}"
 echo -e "${CYAN}   Tiger Kernel Compiler (Non-Root / APatch)     ${NC}"
 echo -e "${PURPLE}=================================================${NC}"
-echo -e "${BLUE}📌 Source Architecture : QPNP - EAS (Stock)${NC}"
+echo -e "${BLUE}📌 Source Architecture : QPNP - EAS (Stock)       ${NC}"
 echo -e "${BLUE}📌 Target Defconfig    : $DEFCONFIG${NC}"
 echo -e "${BLUE}📌 Variant             : Non-Root / APatch Ready${NC}"
-echo -e "${BLUE}📌 Output Format       : $OUTPUT_FORMAT${NC}"
 echo -e "${BLUE}📌 Compiler            : $CLGV${NC}"
 echo -e "${PURPLE}=================================================${NC}"
 
@@ -145,24 +136,15 @@ mkdir -p "$OUTPUT_DIR"
 mkdir -p "$WINDOWS_DEST"
 
 BASE_NAME="Tiger-${VERSION_TAG}-EAS-qpnp-${ROOT_METHOD}"
+OUTPUT_FILE="$OUTPUT_DIR/${BASE_NAME}.zip"
 
-if [ "$OUTPUT_FORMAT" = "img" ]; then
-    OUTPUT_FILE="$OUTPUT_DIR/${BASE_NAME}-boot.img"
-    cp "$KERNEL_IMG" "$OUTPUT_FILE"
-    cp "$OUTPUT_FILE" "$WINDOWS_DEST/"
-    echo -e "${GREEN}📦 Output Image: $OUTPUT_FILE${NC}"
-else
-    OUTPUT_FILE="$OUTPUT_DIR/${BASE_NAME}.zip"
-    echo -e "${BLUE}📦 Packaging AnyKernel3 flashable ZIP: $(basename "$OUTPUT_FILE")...${NC}"
-    
-    cd "$ANYKERNEL_DIR"
-    cp "$KERNEL_IMG" .
-    zip -r9 "$OUTPUT_FILE" * -x .git README.md *placeholder
-    cd "$KERNEL_DIR"
-    
-    cp "$OUTPUT_FILE" "$WINDOWS_DEST/"
-    echo -e "${GREEN}📦 Output ZIP: $OUTPUT_FILE${NC}"
-fi
+echo -e "${BLUE}📦 Packaging AnyKernel3 flashable ZIP: $(basename "$OUTPUT_FILE")...${NC}"
+cd "$ANYKERNEL_DIR"
+cp "$KERNEL_IMG" .
+zip -r9 "$OUTPUT_FILE" * -x .git README.md *placeholder
+cd "$KERNEL_DIR"
+
+cp "$OUTPUT_FILE" "$WINDOWS_DEST/"
 
 echo -e "${PURPLE}=================================================${NC}"
 echo -e "${GREEN}🎉 Build Completed in ${MINUTES}m ${SECONDS}s!${NC}"
